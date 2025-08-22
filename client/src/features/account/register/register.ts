@@ -1,0 +1,30 @@
+import { Component, inject, input, output } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { RegisterCreds, User } from '../../../types/user';
+import { AccountService } from '../../../core/services/account-service';
+
+@Component({
+  selector: 'app-register',
+  imports: [FormsModule],
+  templateUrl: './register.html',
+  styleUrl: './register.css',
+})
+export class Register {
+  protected accountService = inject(AccountService);
+  cancelRegister = output<boolean>();
+  protected creds = {} as RegisterCreds;
+
+  register() {
+    this.accountService.register(this.creds).subscribe({
+      next: (result) => {
+        console.log(result);
+        this.calcel();
+      },
+      error: (error) => console.log(error.message),
+    });
+  }
+
+  calcel() {
+    this.cancelRegister.emit(false);
+  }
+}
